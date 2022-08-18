@@ -1,5 +1,5 @@
 {
-  "name": "jeb-portfolio",
+  "name": "next-strapi",
   "description": "A portfolio for Jacob Byers",
   "author": "Jacob Byers <hello@jacobbyers.me> (https://jacobbyers.me)",
   "version": "1.0.0",
@@ -29,7 +29,7 @@
     "embla-carousel-react": "^7.0.0-rc05",
     "framer-motion": "^4.1.17",
     "locomotive-scroll": "^4.1.4",
-    "next": "^12.2.2",
+    "next": "^12.2.5",
     "next-seo": "^4.26.0",
     "postcss-import": "^14.0.0",
     "postcss-nested": "^5.0.5",
