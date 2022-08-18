@@ -1,0 +1,1 @@
+#Nextjs template connected with Strapi. Uses Framer Motion & Locomotive Scroll

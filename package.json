@@ -1,0 +1,54 @@
+{
+  "name": "jeb-portfolio",
+  "description": "A portfolio for Jacob Byers",
+  "author": "Jacob Byers <hello@jacobbyers.me> (https://jacobbyers.me)",
+  "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:byebyers/jeb.git"
+  },
+  "bugs": {
+    "url": "git@github.com:byebyers/jeb/issues"
+  },
+  "license": "ISC",
+  "keywords": [
+    "nextjs",
+    "next",
+    "tailwind",
+    "framer",
+    "motion",
+    "preact"
+  ],
+  "homepage": "https://jacobbyers.me",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "embla-carousel-react": "^7.0.0-rc05",
+    "framer-motion": "^4.1.17",
+    "locomotive-scroll": "^4.1.4",
+    "next": "^12.2.2",
+    "next-seo": "^4.26.0",
+    "postcss-import": "^14.0.0",
+    "postcss-nested": "^5.0.5",
+    "postcss-preset-env": "^6.7.0",
+    "preact": "^10.5.13",
+    "qs": "^6.11.0",
+    "react": "^17.0.2",
+    "react-device-detect": "^2.2.2",
+    "react-div-100vh": "^0.7.0",
+    "react-dom": "^17.0.2",
+    "react-fps-stats": "^0.2.3",
+    "react-locomotive-scroll": "^0.2.2",
+    "react-smooth-marquee": "^1.0.0",
+    "react-transition-group": "^4.4.2"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.2",
+    "eslint": "^8.20.0",
+    "postcss": "^8.4.14",
+    "tailwindcss": "^3.1.6"
+  }
+}
