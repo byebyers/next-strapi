@@ -178,28 +178,40 @@ import { fetchAPI } from "../lib/api";
 // }
 
 
-const Home = ({ homepage }) => {
+const Home = ({ homepage, locations }) => {
 
-  console.log(homepage.attributes.title)
+  console.log(locations)
 
   return (
     <Layout>
-      <h1 className="text-white">{homepage.attributes.title}</h1>
+      <h1 className="text-white text-center">{homepage.attributes.title}</h1>
+      <div className="mx-auto">
+        {locations.map((node) => {
+
+          console.log(node)
+
+          return(
+            <p key={node.id} className="text-white">{node.attributes.name}</p>
+          )
+        })}
+      </div>
     </Layout>
   );
 };
 
 export async function getStaticProps() {
   // Run API calls in parallel
-  const [homepageRes] = await Promise.all([
+  const [homepageRes, locationsRes] = await Promise.all([
     fetchAPI("/home-page", {
       populate: "*"
     }),
+    fetchAPI("/locations", { populate: "*" }),
   ]);
 
   return {
     props: {
       homepage: homepageRes.data,
+      locations: locationsRes.data,
     },
     revalidate: 1,
   };

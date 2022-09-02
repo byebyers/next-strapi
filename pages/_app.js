@@ -3,6 +3,7 @@ import { LazyMotion, domAnimation, m, AnimatePresence } from "framer-motion"
 import { useRouter } from 'next/router';
 import { DefaultSeo } from 'next-seo';
 import SEO from '@/helpers/seo.config';
+import { LocationContext } from '../context/location';
 import { Context } from '../context/state';
 import { useContext, useEffect, useState } from 'react'
 import Div100vh from 'react-div-100vh'
@@ -25,6 +26,7 @@ const revealHoriReverse = {
 }
 
 export default function App({ Component, pageProps }) {
+  const [primaryLocation, setPrimaryLocation] = useState(0);
   const [introContext, setIntroContext] = useState(false);
   const router = useRouter()
 
@@ -55,7 +57,7 @@ export default function App({ Component, pageProps }) {
 
       />
 
-
+      <LocationContext.Provider value={[primaryLocation, setPrimaryLocation]}>
       <Context.Provider value={[introContext, setIntroContext]}>
         {/* INTRO START */}
         {/* <LazyMotion features={domAnimation}>
@@ -104,6 +106,7 @@ export default function App({ Component, pageProps }) {
           <Component {...pageProps} key={router.asPath} route={router.asPath} />
         </AnimatePresence>
       </Context.Provider>
+      </LocationContext.Provider>
     </>
   )
 }
