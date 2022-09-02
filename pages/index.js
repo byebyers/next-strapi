@@ -1,4 +1,4 @@
-// import { useEffect, useState, useContext } from 'react'
+import {useState, useEffect, useContext} from 'react';
 import Layout from '@/components/layout'
 // import Header from '@/components/header'
 // import Footer from '@/components/footer'
@@ -13,8 +13,15 @@ import Layout from '@/components/layout'
 // import { Context } from '../context/state'
 // import { isMobile } from "react-device-detect";
 import { fetchAPI } from "../lib/api";
+import { findNearest } from 'geolib';
 
+// const NodeGeocoder = require('node-geocoder');
 
+// const options = {
+//   provider: 'openstreetmap'
+// };
+
+// const geocoder = NodeGeocoder(options);
 
 
 // const pageService = new SanityPageService(query)
@@ -178,9 +185,74 @@ import { fetchAPI } from "../lib/api";
 // }
 
 
-const Home = ({ homepage, locations }) => {
 
-  console.log(locations)
+
+export const usePosition = () => {
+  const [position, setPosition] = useState({});
+  const [error, setError] = useState(null);
+  
+  const onChange = ({coords}) => {
+    setPosition({
+      latitude: coords.latitude,
+      longitude: coords.longitude,
+    });
+  };
+  const onError = (error) => {
+    setError(error.message);
+  };
+  useEffect(() => {
+    const geo = navigator.geolocation;
+    if (!geo) {
+      setError('Geolocation is not supported');
+      return;
+    }
+    let watcher = geo.getCurrentPosition(onChange, onError);
+    return () => geo.clearWatch(watcher);
+  }, []);
+  return {...position, error};
+}
+
+export const NearestLocation = (locations) => {
+  const {latitude, longitude, error} = usePosition();
+  
+  let polygon = [];
+  const Coord = (latitude, longitude) => { return { latitude: latitude, longitude: longitude } }
+
+  locations.forEach((node) => {
+    polygon.push({
+      id: `${node.id}`,
+      name: `${node.attributes.name}`,
+      latitude: `${node.attributes.latitude}`,
+      longitude: `${node.attributes.longitude}`,
+    })
+  })
+
+  const nearest = findNearest(Coord(`${latitude}`, `${longitude}`), polygon);
+  
+  return nearest.name
+
+}
+
+
+
+export const useNumber = () => {
+  const test = 1
+  return test
+}
+
+const number = useNumber();
+
+// const res = await geocoder.geocode(`${data.address}`)
+//     data.latitude = res[0].latitude;
+//     data.longitude = res[0].longitude;
+
+
+const Home = ({ homepage, locations, location }) => {
+
+  const {latitude, longitude, error} = usePosition();
+  //const [primaryLocation, setPrimaryLocation] = useContext(Context);
+
+  
 
   return (
     <Layout>
@@ -188,12 +260,18 @@ const Home = ({ homepage, locations }) => {
       <div className="mx-auto">
         {locations.map((node) => {
 
-          console.log(node)
+          //console.log(node)
 
           return(
             <p key={node.id} className="text-white">{node.attributes.name}</p>
           )
         })}
+        <code className="text-white">
+          latitude: {latitude}<br/>
+          longitude: {longitude}<br/>
+          error: {error}<br/>
+          nearest: {NearestLocation(locations)}
+        </code>
       </div>
     </Layout>
   );
@@ -201,17 +279,20 @@ const Home = ({ homepage, locations }) => {
 
 export async function getStaticProps() {
   // Run API calls in parallel
-  const [homepageRes, locationsRes] = await Promise.all([
+  const [homepageRes, locationsRes, locationRes] = await Promise.all([
     fetchAPI("/home-page", {
       populate: "*"
     }),
-    fetchAPI("/locations", { populate: "*" }),
+    //fetchAPI("/locations", { populate: "*" }),
+    fetchAPI("/locations"),
+    fetchAPI(`/locations/${number}`)
   ]);
 
   return {
     props: {
       homepage: homepageRes.data,
       locations: locationsRes.data,
+      location: locationRes.data,
     },
     revalidate: 1,
   };
