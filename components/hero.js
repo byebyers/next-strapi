@@ -1,10 +1,9 @@
 import Image from 'next/image'
-import BlockContent from '@sanity/block-content-to-react'
 
-export default function ModularImageTextBlock({ text, image, layout }) {
+export default function Hero({ data }) {
   let layoutClass = '';
 
-  if (layout == 'image-right') {
+  if (data.imagePlacement == true) {
     layoutClass = 'flex-row-reverse'
   }
 
@@ -12,16 +11,21 @@ export default function ModularImageTextBlock({ text, image, layout }) {
     <div className={`flex flex-wrap p-3 ${layoutClass}`}>
       <div className="w-full md:w-1/2 mb-5 md:mb-0 relative overflow-hidden">
         <Image
-          image={image}
+          src={data.image.data.attributes.url}
           width={600}
           height={350}
           className="h-48 w-full object-cover"
-          alt={post.title}
+          alt={data.image.data.attributes.alternativeText}
         />
       </div>
       <div className="w-full md:w-1/2 indent-12 flex items-center justify-center">
         <div className="w-full md:w-9/12 content">
-          <BlockContent serializers={{ container: ({ children }) => children }} blocks={text} />
+          <p>{data.content}</p>
+          {data.cta && (
+            <button className="mt-5 py-2 px-5 bg-emerald-700 text-white hover:bg-emerald-900">
+              {data.ctaCopy}
+            </button>
+          )}
         </div>
       </div>
     </div>

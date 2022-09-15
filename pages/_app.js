@@ -3,6 +3,7 @@ import { LazyMotion, domAnimation, m, AnimatePresence } from "framer-motion"
 import { useRouter } from 'next/router';
 import { DefaultSeo } from 'next-seo';
 import SEO from '@/helpers/seo.config';
+import { LocationWrapper } from '../context/location';
 import { LocationContext } from '../context/location';
 import { Context } from '../context/state';
 import { useContext, useEffect, useState } from 'react'
@@ -57,7 +58,7 @@ export default function App({ Component, pageProps }) {
 
       />
 
-      <LocationContext.Provider value={[primaryLocation, setPrimaryLocation]}>
+      <LocationWrapper>
       <Context.Provider value={[introContext, setIntroContext]}>
         {/* INTRO START */}
         {/* <LazyMotion features={domAnimation}>
@@ -106,7 +107,7 @@ export default function App({ Component, pageProps }) {
           <Component {...pageProps} key={router.asPath} route={router.asPath} />
         </AnimatePresence>
       </Context.Provider>
-      </LocationContext.Provider>
+      </LocationWrapper>
     </>
   )
 }

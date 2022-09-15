@@ -1,19 +1,16 @@
 import {useState, useEffect, useContext} from 'react';
 import Layout from '@/components/layout'
-// import Header from '@/components/header'
-// import Footer from '@/components/footer'
-// import Container from '@/components/container'
-// import Link from 'next/link'
-// import Image from '@/components/image'
-// import { fade, revealDelay, fadeDelay, reveal, revealDelayTop, revealDelayBottom, scaleDelay } from '@/helpers/transitions'
-// import { LazyMotion, domAnimation, m } from 'framer-motion'
-// import { NextSeo } from 'next-seo'
-// import SanityPageService from '@/services/sanityPageService'
-// import BlockContent from '@sanity/block-content-to-react'
-// import { Context } from '../context/state'
+import Header from '@/components/header'
+import Footer from '@/components/footer'
+import Sections from '@/components/sections';
+import { fade, revealDelay, fadeDelay, reveal, revealDelayTop, revealDelayBottom, scaleDelay } from '@/helpers/transitions'
+import { LazyMotion, domAnimation, m } from 'framer-motion'
+import { NextSeo } from 'next-seo'
+import { LocationContext } from '../context/location'
+import { useLocationContext } from '@/context/location'
 // import { isMobile } from "react-device-detect";
 import { fetchAPI } from "../lib/api";
-import { findNearest } from 'geolib';
+//import { findNearest } from 'geolib';
 
 // const NodeGeocoder = require('node-geocoder');
 
@@ -187,92 +184,43 @@ import { findNearest } from 'geolib';
 
 
 
-export const usePosition = () => {
-  const [position, setPosition] = useState({});
-  const [error, setError] = useState(null);
-  
-  const onChange = ({coords}) => {
-    setPosition({
-      latitude: coords.latitude,
-      longitude: coords.longitude,
-    });
-  };
-  const onError = (error) => {
-    setError(error.message);
-  };
-  useEffect(() => {
-    const geo = navigator.geolocation;
-    if (!geo) {
-      setError('Geolocation is not supported');
-      return;
-    }
-    let watcher = geo.getCurrentPosition(onChange, onError);
-    return () => geo.clearWatch(watcher);
-  }, []);
-  return {...position, error};
-}
+const Home = ({ homepage, locations }) => {
 
-export const NearestLocation = (locations) => {
-  const {latitude, longitude, error} = usePosition();
-  
-  let polygon = [];
-  const Coord = (latitude, longitude) => { return { latitude: latitude, longitude: longitude } }
-
-  locations.forEach((node) => {
-    polygon.push({
-      id: `${node.id}`,
-      name: `${node.attributes.name}`,
-      latitude: `${node.attributes.latitude}`,
-      longitude: `${node.attributes.longitude}`,
-    })
-  })
-
-  const nearest = findNearest(Coord(`${latitude}`, `${longitude}`), polygon);
-  
-  return nearest.name
-
-}
-
-
-
-export const useNumber = () => {
-  const test = 1
-  return test
-}
-
-const number = useNumber();
-
-// const res = await geocoder.geocode(`${data.address}`)
-//     data.latitude = res[0].latitude;
-//     data.longitude = res[0].longitude;
-
-
-const Home = ({ homepage, locations, location }) => {
-
-  const {latitude, longitude, error} = usePosition();
-  //const [primaryLocation, setPrimaryLocation] = useContext(Context);
-
-  
+  //For testing
+  const store = useLocationContext();
 
   return (
     <Layout>
-      <h1 className="text-white text-center">{homepage.attributes.title}</h1>
-      <div className="mx-auto">
-        {locations.map((node) => {
-
-          //console.log(node)
-
-          return(
-            <p key={node.id} className="text-white">{node.attributes.name}</p>
-          )
-        })}
-        <code className="text-white">
-          latitude: {latitude}<br/>
-          longitude: {longitude}<br/>
-          error: {error}<br/>
-          nearest: {NearestLocation(locations)}
-        </code>
-      </div>
+      {/* <NextSeo 
+        title={home.seo.metaTitle} 
+        description={home.seo.metaDesc}
+        openGraph={{
+          images: [
+            { url: home.seo.shareGraphic.asset.url },
+          ],
+        }}
+      /> */}
+      <Header locations={locations} /> 
+      <LazyMotion features={domAnimation}>
+        <m.main 
+          initial="initial"
+          animate="enter"
+          exit="exit"
+          className="pt-[5rem] px-5 min-h-[calc(100vh-3.5rem)] flex flex-wrap gap-y-4"
+        >
+          <div className="mx-auto">
+            <code className="">
+              nearest: {store[0].title} <br/>
+              slug: {store[0].slug} <br/>
+              id: {store[0].id} <br/> 
+            </code>
+          </div>
+          <m.div variants={fade}>
+            <Sections sections={homepage.attributes.sections}/>
+          </m.div>
+        </m.main>
+      </LazyMotion>
+      <Footer />
     </Layout>
   );
 };
@@ -281,18 +229,16 @@ export async function getStaticProps() {
   // Run API calls in parallel
   const [homepageRes, locationsRes, locationRes] = await Promise.all([
     fetchAPI("/home-page", {
-      populate: "*"
+      populate: "deep"
     }),
     //fetchAPI("/locations", { populate: "*" }),
     fetchAPI("/locations"),
-    fetchAPI(`/locations/${number}`)
   ]);
 
   return {
     props: {
       homepage: homepageRes.data,
       locations: locationsRes.data,
-      location: locationRes.data,
     },
     revalidate: 1,
   };
