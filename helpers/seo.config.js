@@ -1,12 +1,12 @@
 export default {
-  defaultTitle: 'JEB Portfolio',
-  description: 'A portfolio for Jacob Byers',
-  titleTemplate: '%s | Jacob Byers',
+  defaultTitle: 'Front Burner Nextjs Template',
+  description: 'A template for Front Burner',
+  titleTemplate: '%s | Front Burner',
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://jacobbyers.me/',
-    site_name: 'Jacob Byers',
+    url: 'https://frontburnergroupdining.com/',
+    site_name: 'Front Burner',
   },
   twitter: {
     handle: '@byersjacob',

@@ -72,7 +72,7 @@ export default function Header({ locations, route }) {
 
           <nav className="flex ml-auto  space-x-6 md:w-auto">
             <FancyLink destination="/" a11yText="Navigate to the home page" label="Home" extraClasses={`${route === '/' ? 'bigDot' : ''} no-underline`} />
-            <FancyLink destination="/" a11yText="Navigate to the Menu page" label="Menu" extraClasses={`${route === '/menu' ? 'bigDot' : ''} no-underline`} />
+            <FancyLink destination="/menu" a11yText="Navigate to the Menu page" label="Menu" extraClasses={`${route === '/menu' ? 'bigDot' : ''} no-underline`} />
             <FancyLink destination="/locations" a11yText="Navigate to the Locations page" label="Locations" extraClasses={`${route === '/locations' ? 'bigDot' : ''} no-underline`} />
           </nav>
         </div>
