@@ -12,8 +12,6 @@ import { fetchAPI } from "../../lib/api";
 import { data } from "autoprefixer";
 
 const Location = ({ locations, location }) => {
-  
-  console.log(location)
 
   return (
     <Layout>
